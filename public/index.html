@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firebase URL Shorter</title>
+
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <div id="message">
+    <h1>Firebase URL Shorter</h1>
+    <div id="center">
+      <input id="originUrl" type="url" placeholder="Input Origin URL">
+      <button id="shorten">SHORTEN</button>
+      <input id="shortenedUrl" type="url" placeholder="Output Shortened URL">
+    </div>
+  </div>
+
+  <script defer src="/__/firebase/4.13.0/firebase-app.js"></script>
+  <script defer src="/__/firebase/init.js"></script>
+  <script defer src="/__/firebase/4.13.0/firebase-firestore.js"></script>
+  <script defer src="index.js"></script>
+</body>
+
+</html>
