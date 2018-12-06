@@ -1,0 +1,33 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8
+
+    working_directory: ~/workspace
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/account-auth.json
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+        name: 'Install firebase-tools'
+        command: npm install --save-dev firebase-tools
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+        
+      - run: 
+        name: 'Decode key file.'
+        command: echo $FIREBASE_KEY | base64 -d > ${HOME}/account-auth.json
+
+      - run:
+        name: 'Deploy Firebase Hosting.'
+        command: firebase deploy --only hosting
