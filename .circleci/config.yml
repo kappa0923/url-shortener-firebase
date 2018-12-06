@@ -6,28 +6,22 @@ jobs:
 
     working_directory: ~/workspace
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/account-auth.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${CIRCLE_WORKING_DIRECTORY}/account-auth.json
 
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-
       - run:
-        name: 'Install firebase-tools'
-        command: npm install --save-dev firebase-tools
+          name: Install firebase-tools
+          command: sudo npm install -g firebase-tools
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
       - run: 
-        name: 'Decode key file.'
-        command: echo $FIREBASE_KEY | base64 -d > ${HOME}/account-auth.json
+          name: Decode key file
+          command: echo $FIREBASE_KEY | base64 -d > ${HOME}/account-auth.json
 
       - run:
-        name: 'Deploy Firebase Hosting.'
-        command: firebase deploy --only hosting
+          name: Deploy Firebase Hosting
+          command: |
+              echo "export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/account-auth.json" >> $BASH_ENV
+              echo $GOOGLE_APPLICATION_CREDENTIALS
+              firebase deploy --only hosting --project $FIREBASE_PROJECT_ID
