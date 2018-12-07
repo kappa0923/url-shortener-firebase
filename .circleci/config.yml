@@ -18,8 +18,11 @@ jobs:
           command: echo $FIREBASE_KEY | base64 -d > ${HOME}/account-auth.json
 
       - run:
+          name: Setup local environment
+          command: echo "export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/account-auth.json" >> $BASH_ENV
+
+      - run:
           name: Deploy Firebase Hosting
           command: |
-              echo "export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/account-auth.json" >> $BASH_ENV
               echo $GOOGLE_APPLICATION_CREDENTIALS
               firebase deploy --only hosting --project $FIREBASE_PROJECT_ID
