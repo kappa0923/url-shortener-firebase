@@ -5,8 +5,6 @@ jobs:
       - image: circleci/node:8
 
     working_directory: ~/workspace
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: ${CIRCLE_WORKING_DIRECTORY}/account-auth.json
 
     steps:
       - checkout
