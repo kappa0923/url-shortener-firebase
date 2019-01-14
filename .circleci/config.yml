@@ -3,9 +3,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:8
-
+    branches:
+        only:
+          - master
     working_directory: ~/workspace
-
     steps:
       - checkout
 
@@ -24,5 +25,11 @@ jobs:
       - run:
           name: Deploy Firebase Hosting
           command: |
-              echo $GOOGLE_APPLICATION_CREDENTIALS
               firebase deploy --only hosting --project $FIREBASE_PROJECT_ID
+
+      - run:
+          name: Deploy Cloud Functions for Firebase
+          command: |
+              cd functions
+              npm build
+              npm deploy
