@@ -31,5 +31,6 @@ jobs:
           name: Deploy Cloud Functions for Firebase
           command: |
               cd functions
+              npm install
               npm run build
               npm run deploy
