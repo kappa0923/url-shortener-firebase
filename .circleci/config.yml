@@ -33,4 +33,4 @@ jobs:
               cd functions
               npm install
               npm run build
-              npm run deploy
+              firebase deploy --only functions --project $FIREBASE_PROJECT_ID
