@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Deploy Firebase Hosting
           command: |
-              firebase deploy --only hosting --project $FIREBASE_PROJECT_ID
+              firebase deploy --only hosting --project $FIREBASE_PROJECT_ID --token $FIREBASE_TOKEN
 
       - run:
           name: Deploy Cloud Functions for Firebase
@@ -33,4 +33,4 @@ jobs:
               cd functions
               npm install
               npm run build
-              firebase deploy --only functions --project $FIREBASE_PROJECT_ID
+              firebase deploy --only functions --project $FIREBASE_PROJECT_ID --token $FIREBASE_TOKEN
