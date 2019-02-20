@@ -11,7 +11,7 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
   const db = admin.firestore();
   console.log('ID : ', id);
 
-  response.header('connection', 'keep-alive');
+  response.set('Cache-Control', 'public, max-age=604800, s-maxage=604800');
 
   db.collection('urls').doc(id).get()
     .then(doc => {
