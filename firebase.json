@@ -22,6 +22,10 @@
         "destination": "/index.html"
       },
       {
+        "source": "/registerUrl",
+        "function": "registerUrl"
+      },
+      {
         "source": "/**",
         "function": "redirectUrl"
       }

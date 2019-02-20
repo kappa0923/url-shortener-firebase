@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
-const settings = { timestampsInSnapshots: true };
-admin.firestore().settings(settings);
 /**
  * @desc ショートリクエストをリダイレクト
  */
@@ -27,33 +25,4 @@ exports.redirectUrl = functions.https.onRequest((request, response) => {
         console.log('Error getting document', err);
     });
 });
-/**
- * @desc URLを登録
- */
-exports.registerUrl = functions.https.onRequest((request, response) => {
-    const url = request.query['url'];
-    const db = admin.firestore();
-    console.log('Register URL : ', url);
-    const urlData = {
-        url: url,
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
-    };
-    db.collection('urls').add(urlData)
-        .then(ref => {
-        console.log(ref.id);
-        const responseData = {
-            originUrl: url,
-            shortId: ref.id,
-            isSuccess: true
-        };
-        response.status(200).send(responseData);
-    })
-        .catch(err => {
-        const responseData = {
-            originUrl: url,
-            shortId: '',
-            isSuccess: false
-        };
-    });
-});
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=redirectUrl.js.map
