@@ -48,7 +48,7 @@ export const registerUrl = functions.https.onCall((data, context) => {
     createdAt: admin.firestore.FieldValue.serverTimestamp()
   }
 
-  db.collection('urls').add(urlData)
+  return db.collection('urls').add(urlData)
     .then(ref => {
       const responseData = {
         originUrl: url,

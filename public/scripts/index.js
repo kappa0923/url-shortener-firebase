@@ -47,6 +47,7 @@ class UrlShortener {
    */
   initFirebase() {
     this.functions = firebase.functions();
+    firebase.auth().signInAnonymously();
   }
 
   /**
