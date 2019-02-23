@@ -32,10 +32,16 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
 /**
  * @desc URLを登録
  */
-export const registerUrl = functions.https.onRequest((request, response) => {
-  const url = request.query['url'];
+export const registerUrl = functions.https.onCall((data, context) => {
+  const validUrl = require("valid-url");
+  const baseUrl = "https://nabe.ga/";
+  const url = data.url;
   const db = admin.firestore();
   console.log('Register URL : ', url);
+
+  if (!validUrl.isUri(url)) {
+    throw new functions.https.HttpsError('invalid-argument', `${url} is not a url.`);
+  }
 
   const urlData = {
     url: url,
@@ -44,19 +50,14 @@ export const registerUrl = functions.https.onRequest((request, response) => {
 
   db.collection('urls').add(urlData)
     .then(ref => {
-      console.log(ref.id);
       const responseData = {
         originUrl: url,
-        shortId: ref.id,
+        shortUrl: baseUrl + ref.id,
         isSuccess: true
       };
-      response.status(200).send(responseData);
+      return responseData;
     })
     .catch(err => {
-      const responseData = {
-        originUrl: url,
-        shortId: '',
-        isSuccess: false
-      };
+      throw new functions.https.HttpsError('invalid-argument', url + 'is not a url.');
     });
 });
