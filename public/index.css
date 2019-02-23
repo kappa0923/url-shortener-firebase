@@ -64,7 +64,7 @@ body {
     border-radius: 3px;
 }
 
-#shortenedUrl {
+.shortened-url {
     max-width: 360px;
     width: 300px;
     margin: 8px auto;

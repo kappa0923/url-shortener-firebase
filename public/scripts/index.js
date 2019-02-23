@@ -47,6 +47,7 @@ class UrlShortener {
    */
   initFirebase() {
     this.functions = firebase.functions();
+
     firebase.auth().signInAnonymously();
   }
 
@@ -73,10 +74,20 @@ class UrlShortener {
     registerUrl({ url: originUrl })
       .then(result => {
         console.log(result.data.shortUrl);
+        this.showShortenUrl(result.data.shortUrl);
       })
       .catch(err => {
         console.log(err.message);
       });
+  }
+
+  /**
+   * @desc 短縮後のURLを画面に表示
+   * @param {String} url 短縮後のURL
+   */
+  showShortenUrl(url) {
+    const urlDiv = document.getElementById('shorten-url');
+    urlDiv.textContent = `Shorten to ${url}`;
   }
 }
 

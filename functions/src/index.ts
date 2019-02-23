@@ -13,8 +13,10 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
   const db = admin.firestore();
   console.log('ID : ', id);
 
+  // キャッシュコントロール
   response.set('Cache-Control', 'public, max-age=604800, s-maxage=604800');
 
+  // リダイレクト先のURLをデータベースから読み込み
   db.collection('urls').doc(id).get()
     .then(doc => {
       if (!doc.exists) {
@@ -39,15 +41,18 @@ export const registerUrl = functions.https.onCall((data, context) => {
   const db = admin.firestore();
   console.log('Register URL : ', url);
 
+  // URLのバリデーション
   if (!validUrl.isUri(url)) {
     throw new functions.https.HttpsError('invalid-argument', `${url} is not a url.`);
   }
 
+  // データベースに登録するデータセット
   const urlData = {
     url: url,
     createdAt: admin.firestore.FieldValue.serverTimestamp()
   }
 
+  // 非同期オペレーションの後にデータを返すにはPromiseを返す。
   return db.collection('urls').add(urlData)
     .then(ref => {
       const responseData = {
