@@ -13,10 +13,13 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
   const db = admin.firestore();
   console.log('ID : ', id);
 
-  // キャッシュコントロール
+  // TODO : 06. リクエストへのレスポンスを設定
+  response.status(200).send(`Hello ${id}!`);
+  
+  // TODO : 13. キャッシュコントロール
   response.set('Cache-Control', 'public, max-age=604800, s-maxage=604800');
 
-  // リダイレクト先のURLをデータベースから読み込み
+  // TODO : 08. リダイレクト先のURLをデータベースから読み込み
   db.collection('urls').doc(id).get()
     .then(doc => {
       if (!doc.exists) {
@@ -52,7 +55,7 @@ export const registerUrl = functions.https.onCall((data, context) => {
     createdAt: admin.firestore.FieldValue.serverTimestamp()
   }
 
-  // 非同期オペレーションの後にデータを返すにはPromiseを返す。
+  // TODO : 10. 非同期オペレーションの後にデータを返すにはPromiseを返す
   return db.collection('urls').add(urlData)
     .then(ref => {
       const responseData = {

@@ -48,6 +48,7 @@ class UrlShortener {
   initFirebase() {
     this.functions = firebase.functions();
 
+    // TODO : 11. 匿名ログイン
     firebase.auth().signInAnonymously();
   }
 
@@ -71,6 +72,7 @@ class UrlShortener {
     const registerUrl = firebase.functions().httpsCallable('registerUrl');
     const originUrl = this.urlInput.value;
 
+    // TODO : 11. Cloud Functions上の短縮URL登録関数を呼び出す
     registerUrl({ url: originUrl })
       .then(result => {
         console.log(result.data.shortUrl);
