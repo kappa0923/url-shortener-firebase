@@ -17,21 +17,8 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
   response.status(200).send(`Hello ${id}!`);
   
   // TODO : 13. キャッシュコントロール
-  response.set('Cache-Control', 'public, max-age=604800, s-maxage=604800');
 
   // TODO : 08. リダイレクト先のURLをデータベースから読み込み
-  db.collection('urls').doc(id).get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log('Page not found');
-        response.status(404).end();
-      } else {
-        console.log('Redirect to ', doc.data().url);
-        response.redirect(301, doc.data().url);
-      }
-    }).catch(err => {
-      console.log('Error getting document', err);
-    });
 });
 
 /**
@@ -56,16 +43,4 @@ export const registerUrl = functions.https.onCall((data, context) => {
   }
 
   // TODO : 10. 非同期オペレーションの後にデータを返すにはPromiseを返す
-  return db.collection('urls').add(urlData)
-    .then(ref => {
-      const responseData = {
-        originUrl: url,
-        shortUrl: baseUrl + ref.id,
-        isSuccess: true
-      };
-      return responseData;
-    })
-    .catch(err => {
-      throw new functions.https.HttpsError('invalid-argument', url + 'is not a url.');
-    });
 });
