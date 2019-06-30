@@ -1,21 +1,22 @@
-import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+"use strict";
 
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
-const settings = {timestampsInSnapshots: true};
+const settings = { timestampsInSnapshots: true };
 admin.firestore().settings(settings);
 
 /**
  * @desc ショートリクエストをリダイレクト
  */
-export const redirectUrl = functions.https.onRequest((request, response) => {
+exports.redirectUrl = functions.https.onRequest((request, response) => {
   const id = request.path.substr(1);
   const db = admin.firestore();
   console.log('ID : ', id);
 
   // TODO : 06. リクエストへのレスポンスを設定
   response.status(200).send(`Hello ${id}!`);
-  
+
   // TODO : 13. キャッシュコントロール
   response.set('Cache-Control', 'public, max-age=604800, s-maxage=604800');
 
@@ -25,7 +26,8 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
       if (!doc.exists) {
         console.log('Page not found');
         response.status(404).end();
-      } else {
+      }
+      else {
         console.log('Redirect to ', doc.data().url);
         response.redirect(301, doc.data().url);
       }
@@ -37,7 +39,7 @@ export const redirectUrl = functions.https.onRequest((request, response) => {
 /**
  * @desc URLを登録
  */
-export const registerUrl = functions.https.onCall((data, context) => {
+exports.registerUrl = functions.https.onRequest((request, response) => {
   const validUrl = require("valid-url");
   const baseUrl = "https://nabe.ga/";
   const url = data.url;
@@ -49,21 +51,20 @@ export const registerUrl = functions.https.onCall((data, context) => {
     throw new functions.https.HttpsError('invalid-argument', `${url} is not a url.`);
   }
 
-  // データベースに登録するデータセット
   const urlData = {
     url: url,
     createdAt: admin.firestore.FieldValue.serverTimestamp()
-  }
+  };
 
   // TODO : 10. 非同期オペレーションの後にデータを返すにはPromiseを返す
-  return db.collection('urls').add(urlData)
+  db.collection('urls').add(urlData)
     .then(ref => {
       const responseData = {
         originUrl: url,
-        shortUrl: baseUrl + ref.id,
+        shortId: baseUrl + ref.id,
         isSuccess: true
       };
-      return responseData;
+      response.status(200).send(responseData);
     })
     .catch(err => {
       throw new functions.https.HttpsError('invalid-argument', url + 'is not a url.');
