@@ -16,16 +16,6 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/index.html"
-      },
-      {
-        "source": "/**",
-        "function": "redirectUrl"
-      }
     ]
   }
 }
