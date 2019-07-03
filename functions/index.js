@@ -25,9 +25,9 @@ exports.redirectUrl = functions.https.onRequest((request, response) => {
 /**
  * @desc URLを登録
  */
-exports.registerUrl = functions.https.onRequest((request, response) => {
+exports.registerUrl = functions.https.onCall((data, context) => {
   const validUrl = require("valid-url");
-  const baseUrl = "https://nabe.ga/";
+  const baseUrl = "https://nabe.ga/"; // TODO : 10. 自分のHostingのURLに書き換える
   const url = data.url;
   const db = admin.firestore();
   console.log('Register URL : ', url);
@@ -43,16 +43,4 @@ exports.registerUrl = functions.https.onRequest((request, response) => {
   };
 
   // TODO : 10. 非同期オペレーションの後にデータを返すにはPromiseを返す
-  return db.collection('urls').add(urlData)
-    .then(ref => {
-      const responseData = {
-        originUrl: url,
-        shortUrl: baseUrl + ref.id,
-        isSuccess: true
-      };
-      return responseData;
-    })
-    .catch(err => {
-      throw new functions.https.HttpsError('invalid-argument', url + 'is not a url.');
-    });
 });
